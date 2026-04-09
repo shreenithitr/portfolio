@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Shreenithi T R — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#09090b;
+  --surface:#111113;
+  --card:#16161a;
+  --gold:#c9a96e;
+  --gold-dim:rgba(201,169,110,0.13);
+  --cream:#f0ebe0;
+  --muted:#6b6b6b;
+  --border:rgba(201,169,110,0.14);
+  --borderl:rgba(255,255,255,0.05);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--cream);font-family:'Outfit',sans-serif;font-weight:300;overflow-x:hidden}
+
+/* LOADER */
+#loader{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity 0.55s ease}
+#loader.out{opacity:0;pointer-events:none}
+.ld-name{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:300;color:var(--gold);letter-spacing:8px;text-transform:uppercase;animation:fu .6s ease both}
+.ld-bar{width:90px;height:1px;background:rgba(255,255,255,0.06);overflow:hidden;animation:fu .6s .2s ease both}
+.ld-fill{height:100%;background:var(--gold);animation:lf 1.2s .3s ease both}
+@keyframes lf{from{width:0}to{width:100%}}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* CURSOR */
+#cur{position:fixed;width:6px;height:6px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:8888;transform:translate(-50%,-50%)}
+#cur-ring{position:fixed;width:30px;height:30px;border:1px solid rgba(201,169,110,0.35);border-radius:50%;pointer-events:none;z-index:8887;transform:translate(-50%,-50%)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:1.2rem 4rem;display:flex;justify-content:space-between;align-items:center;background:rgba(9,9,11,0.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--borderl)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:300;color:rgba(240,235,224,0.45);letter-spacing:3px}
+.nav-links{display:flex;gap:2.5rem}
+.nav-links a{font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--gold)}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-template-rows:1fr;
+  align-items:stretch;
+  padding:0;
+  position:relative;
+  overflow:hidden;
+}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--borderl) 1px,transparent 1px),linear-gradient(90deg,var(--borderl) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 70% 80% at 50% 50%,black,transparent)}
+.hero-glow{position:absolute;right:-80px;top:50%;transform:translateY(-50%);width:560px;height:560px;background:radial-gradient(circle,rgba(201,169,110,0.055) 0%,transparent 65%);pointer-events:none}
+
+/* LEFT COLUMN */
+.hero-left{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:8rem 4rem 4rem 4rem;
+}
+.hero-lbl{font-size:10.5px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:1.8rem;display:flex;align-items:center;gap:14px;animation:fu .7s .2s ease both;opacity:0}
+.hero-lbl::before{content:'';width:26px;height:1px;background:var(--gold)}
+.hero-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3rem,6vw,6rem);font-weight:300;line-height:.92;color:#fff;animation:fu .9s .35s ease both;opacity:0}
+.hero-h1 em{font-style:italic;color:var(--gold)}
+.hero-tag{font-size:14.5px;color:rgba(240,235,224,0.5);line-height:1.9;max-width:460px;margin:2rem 0 2.5rem;animation:fu .9s .5s ease both;opacity:0}
+.hero-acts{display:flex;gap:1.2rem;align-items:center;animation:fu .9s .65s ease both;opacity:0}
+.btn-p{font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);text-decoration:none;border:1px solid var(--border);padding:12px 26px;border-radius:2px;transition:all .25s;cursor:pointer}
+.btn-p:hover{border-color:var(--gold);background:rgba(201,169,110,0.07)}
+.btn-g{font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;cursor:pointer}
+.btn-g:hover{color:var(--cream)}
+
+/* ── RIGHT COLUMN — PHOTO — TRUE CENTER ── */
+.hero-photo{
+  position:relative;
+  z-index:2;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  padding-top:0;   /* removed offset */
+  height:100%;
+
+  animation:fu 1s .45s ease both;
+  opacity:0;
+}
+
+/* Outer wrapper that holds the spinning ring + the image together */
+.photo-outer{
+  position:relative;
+  width:280px;
+  height:340px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+
+/* Spinning decorative ring — slightly larger than the image frame */
+.photo-ring{
+  position:absolute;
+  inset:-18px;
+  border:1px solid var(--border);
+  border-radius:160px 160px 110px 110px;
+  animation:spin 22s linear infinite;
+  pointer-events:none;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* The actual image frame */
+.photo-inner{
+  width:100%;
+  height:100%;
+  border-radius:140px 140px 90px 90px;
+  overflow:hidden;
+  border:1px solid rgba(201,169,110,0.22);
+  position:relative;
+  background:linear-gradient(160deg,#1a1814,#0e0e10);
+  box-shadow:
+    0 0 0 1px rgba(201,169,110,0.06),
+    0 24px 60px rgba(0,0,0,0.55),
+    0 8px 20px rgba(0,0,0,0.4);
+}
+
+.photo-inner img{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+/* Subtle gradient overlay at the bottom */
+.photo-inner::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to bottom,transparent 55%,rgba(9,9,11,0.35));
+  border-radius:inherit;
+  pointer-events:none;
+}
+
+/* Fallback initials */
+.photo-initials{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  font-family:'Cormorant Garamond',serif;
+  font-size:4.5rem;
+  color:var(--gold);
+  font-weight:300;
+}
+
+/* Caption beneath the photo */
+.photo-cap{
+  position:absolute;
+  right:-260px;   /* move text to right side */
+  top:50%;
+  transform:translateY(-50%);
+
+  text-align:left;
+  white-space:nowrap;
+}
+.photo-cap-name{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:400;color:rgba(240,235,224,0.55);letter-spacing:3px;display:block;margin-bottom:5px}
+.photo-cap-sub{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+
+/* SECTION BASE */
+section{padding:5.5rem 4rem;position:relative}
+.sh{display:flex;align-items:center;gap:18px;margin-bottom:3.5rem}
+.sh-num{font-family:'Cormorant Garamond',serif;font-size:2.6rem;color:rgba(201,169,110,0.09);font-weight:300;line-height:1;min-width:58px}
+.sh-title{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:300;color:#fff;white-space:nowrap}
+.sh-title em{font-style:italic;color:var(--gold)}
+.sh-line{flex:1;height:1px;background:var(--border)}
+
+/* SCROLL REVEAL */
+.sr{opacity:0;transform:translateY(26px);transition:opacity .65s ease,transform .65s ease}
+.sr.on{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.07s}.d2{transition-delay:.14s}.d3{transition-delay:.21s}.d4{transition-delay:.28s}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.about-body p{font-size:15px;color:rgba(240,235,224,0.6);line-height:1.95;margin-bottom:1.3rem}
+.about-body p strong{color:var(--gold);font-weight:400}
+.stats-g{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.stat-b{padding:1.6rem;background:var(--card);border:1px solid var(--border);border-radius:5px;text-align:center;transition:border-color .3s,transform .3s;position:relative;overflow:hidden}
+.stat-b::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);transform:scaleX(0);transition:transform .4s ease}
+.stat-b:hover::after{transform:scaleX(1)}
+.stat-b:hover{border-color:rgba(201,169,110,0.3);transform:translateY(-4px)}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:2.3rem;font-weight:300;color:var(--gold);display:block}
+.stat-l{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:4px;display:block;line-height:1.4}
+
+/* SKILLS */
+.skills-wrap{display:flex;flex-direction:column;gap:2.5rem}
+.sk-cat{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);padding-bottom:.8rem;border-bottom:1px solid var(--border);margin-bottom:1rem}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{font-size:12px;padding:7px 16px;border:1px solid var(--borderl);border-radius:2px;color:rgba(240,235,224,0.62);transition:all .22s;cursor:default;position:relative;overflow:hidden}
+.pill::before{content:'';position:absolute;inset:0;background:var(--gold);transform:translateY(101%);transition:transform .22s ease;z-index:0}
+.pill-t{position:relative;z-index:1}
+.pill:hover{color:var(--bg);border-color:var(--gold)}
+.pill:hover::before{transform:translateY(0)}
+.pill.hi{border-color:rgba(201,169,110,0.28);color:var(--gold)}
+
+/* PROJECTS */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:1.3rem}
+.pc{padding:1.8rem;background:var(--card);border:1px solid var(--border);border-radius:5px;transition:all .3s;position:relative;overflow:hidden;cursor:default}
+.pc::before{content:'';position:absolute;left:0;top:0;width:2px;height:0;background:var(--gold);transition:height .35s ease}
+.pc:hover::before{height:100%}
+.pc:hover{background:rgba(201,169,110,0.025);border-color:rgba(201,169,110,0.28);transform:translateY(-5px)}
+.pc-num{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:rgba(201,169,110,0.07);font-weight:300;line-height:1;margin-bottom:.55rem}
+.pc-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:400;color:#fff;margin-bottom:.65rem}
+.pc-body{font-size:13px;color:rgba(240,235,224,0.48);line-height:1.78;margin-bottom:1.1rem}
+.pc-tags{display:flex;flex-wrap:wrap;gap:5px}
+.pc-tag{font-size:10px;padding:3px 9px;background:var(--gold-dim);color:var(--gold);border-radius:2px;letter-spacing:.5px}
+
+/* TIMELINE */
+.tl{padding-left:1.8rem;border-left:1px solid var(--border)}
+.ti{padding:0 0 2.8rem 2.2rem;position:relative}
+.ti:last-child{padding-bottom:0}
+.ti-dot{position:absolute;left:-6px;top:5px;width:11px;height:11px;border-radius:50%;background:var(--bg);border:2px solid var(--gold);transition:background .3s}
+.ti:hover .ti-dot{background:var(--gold)}
+.ti-date{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:.45rem}
+.ti-role{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:#fff;margin-bottom:.2rem}
+.ti-org{font-size:12px;color:var(--muted);margin-bottom:.7rem}
+.ti-desc{font-size:13px;color:rgba(240,235,224,0.5);line-height:1.78}
+
+/* EDUCATION */
+.edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.3rem}
+.ec{padding:1.8rem;background:var(--card);border:1px solid var(--border);border-radius:5px;transition:all .3s}
+.ec:hover{border-color:rgba(201,169,110,0.32);transform:translateY(-4px)}
+.ec-yr{font-size:10px;padding:3px 10px;background:var(--gold-dim);color:var(--gold);border-radius:2px;display:inline-block;margin-bottom:.9rem;letter-spacing:.5px}
+.ec-deg{font-family:'Cormorant Garamond',serif;font-size:1.12rem;font-weight:400;color:#fff;margin-bottom:.4rem}
+.ec-sch{font-size:12px;color:var(--muted);margin-bottom:.8rem;line-height:1.5}
+.ec-score{font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:300;color:var(--gold)}
+
+/* CERTS */
+.ca-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem}
+.ca-col h3{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);padding-bottom:.85rem;border-bottom:1px solid var(--border);margin-bottom:1rem}
+.ca-item{display:flex;gap:12px;padding:.72rem 0;border-bottom:1px solid var(--borderl);transition:padding-left .2s}
+.ca-item:last-child{border-bottom:none}
+.ca-item:hover{padding-left:6px}
+.ca-dot{width:4px;height:4px;background:var(--gold);border-radius:50%;margin-top:9px;flex-shrink:0}
+.ca-item p{font-size:13.5px;color:rgba(240,235,224,0.62);line-height:1.55}
+
+/* CONTACT */
+.ct-wrap{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.ct-intro p{font-size:15px;color:rgba(240,235,224,0.58);line-height:1.92;margin-bottom:1.3rem}
+.ct-intro strong{color:var(--gold);font-weight:400}
+.ct-cards{display:flex;flex-direction:column;gap:.85rem}
+.ct-card{display:flex;align-items:center;gap:1rem;padding:1.1rem 1.4rem;background:var(--card);border:1px solid var(--border);border-radius:5px;text-decoration:none;color:var(--cream);transition:all .25s}
+.ct-card:hover{border-color:rgba(201,169,110,0.38);transform:translateX(6px)}
+.ct-icon{width:36px;height:36px;border-radius:50%;background:var(--gold-dim);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gold);flex-shrink:0}
+.ct-lbl{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.ct-val{font-size:13.5px;color:var(--cream)}
+
+/* FOOTER */
+footer{padding:2.5rem 4rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.f-name{font-family:'Cormorant Garamond',serif;font-size:.95rem;font-weight:300;color:rgba(240,235,224,0.22);letter-spacing:3px}
+.f-note{font-size:11px;color:rgba(107,107,107,0.55);letter-spacing:1px}
+
+/* BACK TO TOP */
+#btt{position:fixed;bottom:2rem;right:2rem;width:40px;height:40px;background:var(--card);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:.95rem;z-index:400;opacity:0;transform:translateY(10px);transition:all .3s;cursor:pointer;user-select:none}
+#btt.show{opacity:1;transform:translateY(0)}
+#btt:hover{border-color:var(--gold);background:rgba(201,169,110,0.08)}
+
+/* RESPONSIVE */
+@media(max-width:1050px){
+  .hero{grid-template-columns:1fr 1fr}
+  .photo-outer{width:240px;height:290px}
+}
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem}
+  .nav-links{gap:1.2rem}
+  .hero{
+    grid-template-columns:1fr;
+    grid-template-rows:auto auto;
+    min-height:100vh;
+  }
+  .hero-left{
+    padding:7rem 1.5rem 2rem;
+    text-align:center;
+    justify-content:flex-end;
+    order:2;
+  }
+  .hero-lbl{justify-content:center}
+  .hero-acts{justify-content:center}
+  .hero-photo{
+    order:1;
+    padding-top:100px;
+    padding-bottom:2rem;
+    min-height:auto;
+    justify-content:center;
+  }
+  .photo-outer{width:200px;height:240px}
+  section{padding:3.5rem 1.5rem}
+  .about-grid,.edu-grid,.ca-grid,.ct-wrap{grid-template-columns:1fr;gap:2rem}
+  .proj-grid{grid-template-columns:1fr}
+  footer{flex-direction:column;text-align:center;padding:2rem 1.5rem}
+}
+@media(max-width:580px){
+  .nav-links{display:none}
+  .hero-h1{font-size:2.8rem}
+  .stats-g{grid-template-columns:1fr 1fr}
+  .photo-outer{width:170px;height:205px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-name">Shreenithi T R</div>
+  <div class="ld-bar"><div class="ld-fill"></div></div>
+</div>
+
+<!-- CURSOR -->
+<div id="cur"></div>
+<div id="cur-ring"></div>
+
+<!-- BACK TO TOP -->
+<div id="btt" title="Back to top">&#8593;</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Shreenithi T R</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#skills">Skills</a>
+    <a href="#projects">Projects</a>
+    <a href="#experience">Experience</a>
+    <a href="#education">Education</a>
+    <a href="#achievements">Achievements</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="top">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+
+  <!-- LEFT: Text -->
+  <div class="hero-left">
+    <div class="hero-lbl">Computer Science Engineer &nbsp;&middot;&nbsp; 2023 – 2027</div>
+    <h1 class="hero-h1">Shreenithi<br><em>T R</em></h1>
+    <p class="hero-tag">
+      A driven engineer with a strong foundation in artificial intelligence, web development, and user experience design. I build solutions that are technically rigorous, purposeful, and built to last.
+    </p>
+    <div class="hero-acts">
+      <a href="#contact" class="btn-p">Get in Touch &#8599;</a>
+      <a href="#about" class="btn-g">Explore Work &#8595;</a>
+    </div>
+  </div>
+
+  <!-- RIGHT: Photo — centered via flexbox in its grid cell -->
+  <div class="hero-photo">
+    <div class="photo-outer">
+      <div class="photo-ring"></div>
+      <div class="photo-inner" id="photo-wrap">
+        <img id="main-photo" src="photo.jpeg" alt="Shreenithi T R"/>
+        <div class="photo-initials" id="initials">ST</div>
+      </div>
+    </div>
+    <div class="photo-cap">
+      <span class="photo-cap-name">Shreenithi T R</span>
+      <span class="photo-cap-sub">CSE &nbsp;&middot;&nbsp; KPRIET &nbsp;&middot;&nbsp; Coimbatore</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ABOUT ═══ -->
+<section id="about">
+  <div class="sh sr">
+    <div class="sh-num">01</div>
+    <h2 class="sh-title">About <em>Me</em></h2>
+    <div class="sh-line"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-body sr d1">
+      <p>I am a third-year <strong>Computer Science and Engineering</strong> undergraduate at KPR Institute of Engineering and Technology, Coimbatore, maintaining a CGPA of 8.35. My academic journey is shaped by a genuine curiosity for building systems that are both intelligent and purposeful.</p>
+      <p>My work spans <strong>machine learning, computer vision, cloud deployment,</strong> and <strong>UI/UX design</strong> — disciplines I pursue not in isolation, but as interconnected tools for solving real-world problems. From training YOLOv8 models on Indian traffic data to designing traceability applications for the fishing industry, I bring an end-to-end perspective to every project I undertake.</p>
+      <p>I am equally comfortable writing <strong>Java backend logic</strong>, tuning <strong>ML pipelines on IBM Watsonx,</strong> or crafting a clean user interface in <strong>Figma.</strong> I believe that great engineering is not just about what works — it is about what works well, for people.</p>
+    </div>
+    <div class="stats-g sr d2">
+      <div class="stat-b">
+        <span class="stat-n">8.35</span>
+        <span class="stat-l">CGPA</span>
+      </div>
+      <div class="stat-b">
+        <span class="stat-n">185+</span>
+        <span class="stat-l">LeetCode Problems</span>
+      </div>
+      <div class="stat-b">
+        <span class="stat-n">3</span>
+        <span class="stat-l">Google Cloud Badges</span>
+      </div>
+      <div class="stat-b">
+        <span class="stat-n">5+</span>
+        <span class="stat-l">Projects Delivered</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SKILLS ═══ -->
+<section id="skills">
+  <div class="sh sr">
+    <div class="sh-num">02</div>
+    <h2 class="sh-title">Technical <em>Skills</em></h2>
+    <div class="sh-line"></div>
+  </div>
+  <div class="skills-wrap">
+    <div class="sr d1">
+      <div class="sk-cat">Languages &amp; Web</div>
+      <div class="pills">
+        <div class="pill hi"><span class="pill-t">Java</span></div>
+        <div class="pill hi"><span class="pill-t">Python</span></div>
+        <div class="pill"><span class="pill-t">HTML</span></div>
+        <div class="pill"><span class="pill-t">CSS</span></div>
+        <div class="pill"><span class="pill-t">JavaScript</span></div>
+        <div class="pill"><span class="pill-t">SQL &amp; MySQL</span></div>
+        <div class="pill"><span class="pill-t">REST APIs</span></div>
+      </div>
+    </div>
+    <div class="sr d2">
+      <div class="sk-cat">AI / ML &amp; Cloud</div>
+      <div class="pills">
+        <div class="pill hi"><span class="pill-t">YOLOv8</span></div>
+        <div class="pill"><span class="pill-t">OpenCV</span></div>
+        <div class="pill"><span class="pill-t">Random Forest</span></div>
+        <div class="pill"><span class="pill-t">SVM</span></div>
+        <div class="pill hi"><span class="pill-t">IBM Watsonx.ai</span></div>
+        <div class="pill"><span class="pill-t">AutoAI</span></div>
+        <div class="pill hi"><span class="pill-t">AWS Fundamentals</span></div>
+        <div class="pill"><span class="pill-t">Roboflow</span></div>
+        <div class="pill"><span class="pill-t">Watson OpenScale</span></div>
+      </div>
+    </div>
+    <div class="sr d3">
+      <div class="sk-cat">Design &amp; Data Visualisation</div>
+      <div class="pills">
+        <div class="pill hi"><span class="pill-t">Figma</span></div>
+        <div class="pill"><span class="pill-t">Power BI</span></div>
+        <div class="pill"><span class="pill-t">Canva</span></div>
+        <div class="pill"><span class="pill-t">UI/UX Prototyping</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROJECTS ═══ -->
+<section id="projects">
+  <div class="sh sr">
+    <div class="sh-num">03</div>
+    <h2 class="sh-title">Featured <em>Projects</em></h2>
+    <div class="sh-line"></div>
+  </div>
+  <div class="proj-grid">
+    <div class="pc sr d1">
+      <div class="pc-num">01</div>
+      <div class="pc-title">Indian Traffic Sign Detection</div>
+      <div class="pc-body">Developed a real-time computer vision model to detect and classify Indian traffic signs using YOLOv8 and OpenCV. The dataset was constructed and annotated via Roboflow, with augmentation strategies applied to address varied lighting and environmental conditions.</div>
+      <div class="pc-tags">
+        <span class="pc-tag">YOLOv8</span><span class="pc-tag">OpenCV</span><span class="pc-tag">Roboflow</span><span class="pc-tag">Python</span>
+      </div>
+    </div>
+    <div class="pc sr d2">
+      <div class="pc-num">02</div>
+      <div class="pc-title">Power System Fault Detection</div>
+      <div class="pc-body">Designed and deployed ML models on IBM Watsonx.ai to identify four categories of power system faults — LG, LL, LLG, and LLLG. Leveraged AutoAI for automated model selection and integrated REST API deployment with Watson OpenScale for continuous performance monitoring.</div>
+      <div class="pc-tags">
+        <span class="pc-tag">IBM Watsonx.ai</span><span class="pc-tag">AutoAI</span><span class="pc-tag">SVM</span><span class="pc-tag">REST API</span>
+      </div>
+    </div>
+    <div class="pc sr d3">
+      <div class="pc-num">03</div>
+      <div class="pc-title">AI-Powered Fisheries Traceability App</div>
+      <div class="pc-body">Designed an offline-capable Android application prototype in Figma for fishermen, inspectors, and buyers. The solution incorporates AI-driven workflows for species recognition, freshness detection, and volume estimation, supported by geotagging and timestamps to enable supply chain transparency.</div>
+      <div class="pc-tags">
+        <span class="pc-tag">Figma</span><span class="pc-tag">UI/UX</span><span class="pc-tag">Android</span><span class="pc-tag">Geotagging</span>
+      </div>
+    </div>
+    <div class="pc sr d4">
+      <div class="pc-num">04</div>
+      <div class="pc-title">Social Media Sentiment Analysis</div>
+      <div class="pc-body">Built a sentiment analysis dashboard to evaluate public opinion across social media platforms. Data was extracted and cleaned using SQL, then visualised in Power BI to reveal positive, negative, and neutral sentiment trends — delivering actionable insights for business and policy contexts.</div>
+      <div class="pc-tags">
+        <span class="pc-tag">SQL</span><span class="pc-tag">Power BI</span><span class="pc-tag">Data Analytics</span>
+      </div>
+    </div>
+    <div class="pc sr d1">
+      <div class="pc-num">05</div>
+      <div class="pc-title">ATM Simulation System</div>
+      <div class="pc-body">Built a console-based ATM simulation in Java applying core object-oriented programming principles. The system implements secure user authentication, balance inquiry, deposits, and withdrawals, with comprehensive input validation and exception handling to ensure operational reliability.</div>
+      <div class="pc-tags">
+        <span class="pc-tag">Java</span><span class="pc-tag">OOP</span><span class="pc-tag">Exception Handling</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ EXPERIENCE ═══ -->
+<section id="experience">
+  <div class="sh sr">
+    <div class="sh-num">04</div>
+    <h2 class="sh-title">Experience &amp; <em>Leadership</em></h2>
+    <div class="sh-line"></div>
+  </div>
+  <div class="tl sr d1">
+    <div class="ti">
+      <div class="ti-dot"></div>
+      <div class="ti-date">July – August 2025</div>
+      <div class="ti-role">IBM SkillsBuild Cloud Internship</div>
+      <div class="ti-org">Edunet Foundation &middot; AICTE Collaboration &middot; Virtual</div>
+      <div class="ti-desc">Completed a structured virtual internship covering cloud computing fundamentals, data preprocessing techniques, and practical assignments aligned with IBM cloud platforms. Developed hands-on familiarity with cloud infrastructure and deployment concepts within an industry-guided learning environment.</div>
+    </div>
+    <div class="ti">
+      <div class="ti-dot"></div>
+      <div class="ti-date">January – February 2025</div>
+      <div class="ti-role">Java Development Intern</div>
+      <div class="ti-org">Techoctanet Services Pvt. Ltd.</div>
+      <div class="ti-desc">Contributed to the development and optimisation of Java-based applications using object-oriented programming principles. Applied systematic debugging techniques to improve application reliability and performance, collaborating closely with the core engineering team throughout the engagement.</div>
+    </div>
+    <div class="ti">
+      <div class="ti-dot"></div>
+      <div class="ti-date">Leadership Role</div>
+      <div class="ti-role">Department Event Coordinator — Vyntra</div>
+      <div class="ti-org">KPR Institute of Engineering and Technology</div>
+      <div class="ti-desc">Served as coordinator for the departmental technical festival Vyntra, overseeing the planning, organisation, and execution of both technical and non-technical events. Managed cross-functional team responsibilities and coordinated logistics to ensure smooth delivery of all scheduled activities.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ EDUCATION ═══ -->
+<section id="education">
+  <div class="sh sr">
+    <div class="sh-num">05</div>
+    <h2 class="sh-title"><em>Education</em></h2>
+    <div class="sh-line"></div>
+  </div>
+  <div class="edu-grid">
+    <div class="ec sr d1">
+      <div class="ec-yr">2023 – 2027</div>
+      <div class="ec-deg">B.E. Computer Science &amp; Engineering</div>
+      <div class="ec-sch">KPR Institute of Engineering and Technology, Coimbatore</div>
+      <div class="ec-score">8.35 / 10 CGPA</div>
+    </div>
+    <div class="ec sr d2">
+      <div class="ec-yr">2022 – 2023</div>
+      <div class="ec-deg">Higher Secondary Certificate (HSC)</div>
+      <div class="ec-sch">Infant Jesus Matric Higher Secondary School</div>
+      <div class="ec-score">90.2%</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CERTS & ACHIEVEMENTS ═══ -->
+<section id="achievements">
+  <div class="sh sr">
+    <div class="sh-num">06</div>
+    <h2 class="sh-title">Certifications &amp; <em>Achievements</em></h2>
+    <div class="sh-line"></div>
+  </div>
+  <div class="ca-grid">
+    <div class="ca-col sr d1">
+      <h3>Certifications</h3>
+      <div class="ca-item"><div class="ca-dot"></div><p>SQL (Intermediate) — HackerRank</p></div>
+      <div class="ca-item"><div class="ca-dot"></div><p>CCNA: Introduction to Networks — Cisco</p></div>
+      <div class="ca-item"><div class="ca-dot"></div><p>Introduction to Java — Coursera</p></div>
+    </div>
+    <div class="ca-col sr d2">
+      <h3>Achievements</h3>
+      <div class="ca-item"><div class="ca-dot"></div><p>Solved 185+ algorithmic problems on LeetCode</p></div>
+      <div class="ca-item"><div class="ca-dot"></div><p>Earned 3 Google Cloud Generative AI skill badges</p></div>
+      <div class="ca-item"><div class="ca-dot"></div><p>Earned 1 Salesforce Trailhead badge</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section id="contact">
+  <div class="sh sr">
+    <div class="sh-num">07</div>
+    <h2 class="sh-title">Get in <em>Touch</em></h2>
+    <div class="sh-line"></div>
+  </div>
+  <div class="ct-wrap">
+    <div class="ct-intro sr d1">
+      <p>I am actively open to <strong>internship opportunities, research collaborations,</strong> and <strong>project partnerships</strong> in the domains of artificial intelligence, software development, and product design.</p>
+      <p>Whether you have a specific opportunity in mind or simply want to connect and exchange ideas, I would be glad to hear from you. Please feel free to reach out through any of the channels listed here.</p>
+      <p>Based in <strong>Tiruppur, Tamil Nadu</strong> &middot; Available for remote and on-site roles.</p>
+    </div>
+    <div class="ct-cards sr d2">
+      <a class="ct-card" href="mailto:shreenithi693@gmail.com">
+        <div class="ct-icon">&#9993;</div>
+        <div><div class="ct-lbl">Email</div><div class="ct-val">shreenithi693@gmail.com</div></div>
+      </a>
+      <a class="ct-card" href="tel:+919585225954">
+        <div class="ct-icon">&#9990;</div>
+        <div><div class="ct-lbl">Phone</div><div class="ct-val">+91 95852 25954</div></div>
+      </a>
+      <a class="ct-card" href="https://www.linkedin.com/in/shreenithi-t-r-43331633b" target="_blank">
+        <div class="ct-icon" style="font-size:11px;font-weight:500;letter-spacing:0">in</div>
+        <div><div class="ct-lbl">LinkedIn</div><div class="ct-val">shreenithi-t-r-43331633b</div></div>
+      </a>
+      <a class="ct-card" href="https://github.com/shreenithitr" target="_blank">
+        <div class="ct-icon" style="font-size:11px">&lt;/&gt;</div>
+        <div><div class="ct-lbl">GitHub</div><div class="ct-val">github.com/shreenithitr</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-name">Shreenithi T R</div>
+  <div class="f-note">B.E. CSE &middot; KPR Institute &middot; Coimbatore &middot; 2023 – 2027</div>
+</footer>
+
+<script>
+// ── LOADER ──
+(function(){
+  function hide(){
+    var l=document.getElementById('loader');
+    if(!l)return;
+    l.classList.add('out');
+    setTimeout(function(){l.style.display='none'},600);
+  }
+  setTimeout(hide,1600);
+  window.addEventListener('load',function(){setTimeout(hide,400)});
+})();
+
+// ── PHOTO FALLBACK ──
+(function(){
+  var img=document.getElementById('main-photo');
+  if(!img)return;
+  img.addEventListener('error',function(){
+    img.style.display='none';
+    document.getElementById('initials').style.display='flex';
+  });
+  if(img.complete && img.naturalWidth===0){
+    img.style.display='none';
+    document.getElementById('initials').style.display='flex';
+  }
+})();
+
+// ── CURSOR ──
+(function(){
+  var cur=document.getElementById('cur');
+  var ring=document.getElementById('cur-ring');
+  if(!cur||!ring)return;
+  var mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',function(e){
+    mx=e.clientX;my=e.clientY;
+    cur.style.left=mx+'px';
+    cur.style.top=my+'px';
+  });
+  function loop(){
+    rx+=(mx-rx)*0.1;
+    ry+=(my-ry)*0.1;
+    ring.style.left=rx+'px';
+    ring.style.top=ry+'px';
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+// ── SCROLL REVEAL ──
+(function(){
+  var els=document.querySelectorAll('.sr');
+  if(!els.length)return;
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting) e.target.classList.add('on');
+    });
+  },{threshold:0.07});
+  els.forEach(function(el){io.observe(el)});
+})();
+
+// ── BACK TO TOP ──
+(function(){
+  var btt=document.getElementById('btt');
+  if(!btt)return;
+  window.addEventListener('scroll',function(){
+    btt.classList.toggle('show',window.scrollY>500);
+  });
+  btt.addEventListener('click',function(){
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+})();
+
+// ── ACTIVE NAV HIGHLIGHT ──
+(function(){
+  var secs=document.querySelectorAll('section[id]');
+  var links=document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll',function(){
+    var sy=window.scrollY+140;
+    secs.forEach(function(s){
+      if(sy>=s.offsetTop && sy<s.offsetTop+s.offsetHeight){
+        links.forEach(function(a){a.classList.remove('active')});
+        var a=document.querySelector('.nav-links a[href="#'+s.id+'"]');
+        if(a) a.classList.add('active');
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>
